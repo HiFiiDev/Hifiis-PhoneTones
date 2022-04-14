@@ -1,0 +1,14 @@
+#!/system/bin/sh
+# chmod -R 755 /su/su.d /sbin/supersu/su.d
+#
+# Systemless Media Replacement Mounts
+# osm0sis @ xda-developers
+
+sumnt=$(find / -maxdepth 2 | grep -E '^/su$|^/sbin/supersu$');
+
+if [ -e /system/product/media ]; then
+  mount -o bind $sumnt/media /system/product/media;
+else
+  mount -o bind $sumnt/media /system/media;
+fi;
+
