@@ -2,19 +2,19 @@
 #
 # Magisk Module Template Config Script
 # by topjohnwu
-# 
+#
 ##########################################################################################
 ##########################################################################################
-# 
+#
 # Instructions:
-# 
+#
 # 1. Place your files into system folder (delete the placeholder file)
 # 2. Fill in your module's info into module.prop
 # 3. Configure the settings in this file (common/config.sh)
 # 4. For advanced features, add shell commands into the script files under common:
 #    post-fs-data.sh, service.sh
 # 5. For changing props, add your additional/modified props into common/system.prop
-# 
+#
 ##########################################################################################
 
 ##########################################################################################
@@ -27,12 +27,14 @@
 # This should also be the same as the id in your module.prop to prevent confusion
 MODID=phonetones
 
+DefaultRingtone=/system/product/media/audio/notifications/Eureka.ogg
+
 # Set to true if you need to enable Magic Mount
 # Most mods would like it to be enabled
 AUTOMOUNT=true
 
 # Set to true if you need to load system.prop
-PROPFILE=false
+PROPFILE=true
 
 # Set to true if you need post-fs-data script
 POSTFSDATA=true
@@ -47,9 +49,29 @@ LATESTARTSERVICE=false
 # Set what you want to show when installing your mod
 
 print_modname() {
-  ui_print "**********************"
-  ui_print " Hifiis Phone Tones!! "
-  ui_print "**********************"
+
+    ui_print "**********************"
+    ui_print "                      "
+    ui_print " Hifiis Phone Tones!! "
+    ui_print "                      "
+    ui_print "**********************"
+    sleep 5
+}
+
+checkIfDefaultRingtoneExistsTest()
+{
+    if test -f "$DefaultRingtone"; then
+        ui_print "$DefaultRingtone exists."
+    fi
+}
+
+readPropFile()
+{
+    if [ -f /product/etc/build.prop ]; then
+        grep -i "alarm" /system/product/etc/build.prop
+        grep -i "notification" /system/product/etc/build.prop
+        grep -i "ringtone" /system/product/etc/build.prop
+    fi
 }
 
 ##########################################################################################
@@ -74,11 +96,21 @@ REPLACE="
 REPLACE="
 /system/product/media/audio/
 /system/product/media/audio/ringtones
+/system/product/media/audio/alarms
+/system/product/media/audio/notifications
 /system/media
 /system/media/audio
-/system/product/media/audio/notifications/Popcorn.ogg
 "
 
+ui_print "############################"
+ui_print "#                          #"
+ui_print "#           TEST           #"
+ui_print "#                          #"
+ui_print "############################"
+readPropFile
+sleep 5
+checkIfDefaultRingtoneExistsTest
+sleep 5
 ##########################################################################################
 # Permissions
 ##########################################################################################
@@ -87,8 +119,8 @@ REPLACE="
 
 set_permissions() {
   # Default permissions, don't remove them
-  set_perm_recursive  $MODPATH/system/media/  0  0  0755  0644
-  
+  set_perm_recursive  $MODPATH/system/product/media/  0  0  0755  0644
+
   # Only some special files require specific permissions
   # The default permissions should be good enough for most cases
 
@@ -105,4 +137,4 @@ set_permissions() {
 
 SKIPUNZIP=1
 unzip -qjo "$ZIPFILE" 'common/functions.sh' -d $TMPDIR >&2
-. $TMPDIR/functions.sh
+. $TMPDIR/functions.sh hmmm

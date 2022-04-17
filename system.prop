@@ -1,0 +1,4 @@
+# this would be cool if it worked :p
+ro.config.alarm_alert=custom_alarm .ogg
+ro.config.notification_sound=custom_notif.ogg
+ro.config.ringtone=custom_ringtone.ogg
